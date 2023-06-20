@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -8,6 +8,7 @@ import {
   faStackOverflow,
 } from "@fortawesome/free-brands-svg-icons";
 import { Box, HStack } from "@chakra-ui/react";
+import useHeaderScroll from '../hooks/useHeaderScroll';
 
 const socials = [
   {
@@ -33,16 +34,8 @@ const socials = [
 ];
 
 const Header = () => {
-  const handleClick = (anchor) => () => {
-    const id = `${anchor}-section`;
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  };
+  const headerRef = useRef(null);
+  const handleClick = useHeaderScroll(headerRef);
 
   return (
     <Box
@@ -51,10 +44,12 @@ const Header = () => {
       left={0}
       right={0}
       translateY={0}
+      zIndex={1}
       transitionProperty="transform"
       transitionDuration=".3s"
       transitionTimingFunction="ease-in-out"
       backgroundColor="#18181b"
+      ref={headerRef}
     >
       <Box color="white" maxWidth="1280px" margin="0 auto">
         <HStack
@@ -64,17 +59,22 @@ const Header = () => {
           alignItems="center"
         >
           <nav>
-            {/* Add social media links based on the `socials` data */}
-               <HStack spacing={8}>
-              {socials.map(({ icon, url }) => <a href={url} key={ url}><FontAwesomeIcon icon={icon} size="2x"/></a> ) }
+            <HStack spacing={4}>
+              {socials.map((social) => (
+                <a href={social.url} key={social.url} target="_blank">
+                  <FontAwesomeIcon icon={social.icon} size="lg" />
+                </a>
+              ))}
             </HStack>
-             
           </nav>
           <nav>
             <HStack spacing={8}>
-              {/* Add links to Projects and Contact me section */}
-              <a href="/#projects-section">Projects</a>
-              <a href="/#contactme-section">Contact Me</a>
+              <a href="/#projects" onClick={handleClick("projects")}>
+                Projects
+              </a>
+              <a href="/#contact-me" onClick={handleClick("contactme")}>
+                Contact
+              </a>
             </HStack>
           </nav>
         </HStack>
