@@ -38,8 +38,7 @@ const ContactMeSection = () => {
         message: "",
       },
       onSubmit: async (values) => {
-        await submit("https://example.com", values);
-        console.log(values);
+        await submit("http://localhost:3001/api", values);
       },
       validationSchema,
     }
@@ -52,7 +51,6 @@ const ContactMeSection = () => {
     resetForm();
   }, [response]);
 
-  const getIsInvalid = (name) => touched[name] && errors[name];
 
   return (
     <FullScreenSection
@@ -68,7 +66,7 @@ const ContactMeSection = () => {
         <Box p={6} rounded="md" w="100%">
           <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
-              <FormControl isInvalid={getIsInvalid("firstName")}>
+              <FormControl isInvalid={touched.firstName && errors.firstName}>
                 <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input id="firstName" {...getFieldProps("firstName")} />
                 <FormErrorMessage>{errors.firstName}</FormErrorMessage>
